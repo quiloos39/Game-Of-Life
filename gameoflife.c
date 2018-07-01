@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define N 16
+#define N 16 // Size of grid
 
 int countNeighbors(int, int, int **);
 int getState(int, int, int **);
@@ -18,17 +18,17 @@ int main()
 		tmp[y] = (int *) malloc(sizeof(int) * N);
 		for (x = 0; x < N; x++)
 		{
-			setState(x, y, grid, 0);
+			setState(x, y, grid, 0); // Sets initial states of all cells to 0 (dead) 
 		}
 	}
 	
-	grid[0][0] = 1;
-	grid[0][1] = 1;
-	grid[0][2] = 1;
-	grid[1][2] = 1;
-	grid[2][1] = 1;
+	setState(0, 2, grid, 1); //       *
+	setState(1, 2, grid, 1); // ==>    *
+	setState(2, 2, grid, 1); //      ***
+	setState(2, 1, grid, 1); //
+	setState(1, 0, grid, 1); //
 	
-	sleep(1);
+	sleep(5);
 	
 	while (1)
 	{
@@ -46,9 +46,9 @@ int main()
 			for (x = 0; x < N; x++)
 			{
 				int n = countNeighbors(x, y, tmp);
-				if (getState(x, y, tmp) == 1)
+				if (getState(x, y, tmp))
 				{
-					if (n < 2 || n > 3)
+					if (n < 2 || n > 3) // if n (amount of neighbors) < 2 dies because under population. if n > 3 dies because of over population.
 					{
 						setState(x, y, grid, 0);
 					}
@@ -68,9 +68,9 @@ int main()
 						setState(x, y, grid, 0);
 					}
 				}
-				if (getState(x, y, grid) == 1)
+				if (getState(x, y, grid))
 				{
-					printf("%c", '#');
+					printf("%c", '0');
 				}
 				else
 				{
@@ -79,7 +79,7 @@ int main()
 			}
 			printf("\n");
 		}
-		usleep(500000);
+		usleep(80000); // How fast game runs.
 	}
 	
 	return 0;
@@ -89,41 +89,41 @@ int main()
 
 
 
-int countNeighbors(int x, int y, int **grid)
+int countNeighbors(int x, int y, int **grid) // Check for how many alive neighbors it has.
 {
 	int n = 0;
-	if (getState(x + 1, y, grid) == 1)
+	if (getState(x + 1, y, grid))
 	{
 		n++;
 	}
 	
-	if (getState(x - 1, y, grid) == 1)
+	if (getState(x - 1, y, grid))
 	{
 		n++;
 	}
 	
-	if (getState(x, y + 1, grid) == 1)
+	if (getState(x, y + 1, grid))
 	{
 		n++;
 	}
-	if (getState(x, y - 1, grid) == 1)
+	if (getState(x, y - 1, grid))
 	{
 		n++;
 	}
 	
-	if (getState(x + 1, y + 1, grid) == 1)
+	if (getState(x + 1, y + 1, grid))
 	{
 		n++;
 	}
-	if (getState(x - 1, y + 1, grid) == 1)
+	if (getState(x - 1, y + 1, grid))
 	{
 		n++;
 	}
-	if (getState(x + 1, y - 1, grid) == 1)
+	if (getState(x + 1, y - 1, grid))
 	{
 		n++;
 	}
-	if (getState(x - 1, y - 1, grid) == 1)
+	if (getState(x - 1, y - 1, grid))
 	{
 		n++;
 	}
@@ -133,14 +133,14 @@ int countNeighbors(int x, int y, int **grid)
 int getState(int x, int y, int **grid)
 {
 	
-	if (y >= 0 && x >= 0 && x < N && y < N)
+	if (y >= 0 && x >= 0 && x < N && y < N) // Making sure that it's in bounds since our array is NxN in size.
 	{
 		return grid[y][x];
 	}
 	return 0;
 }
 
-void setState(int x, int y, int **grid, int state)
+void setState(int x, int y, int **grid, int state) // Sets cell state either 0 (dead) or 1 (alive).
 {
 	grid[y][x] = state;
 }
